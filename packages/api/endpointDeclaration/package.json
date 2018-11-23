@@ -1,13 +1,13 @@
 {
   "name": "@ts-fullstack-helpers/define-endpoint",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "scripts": {
     "prepare": "rm -rf dist && tsc",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "main": "dist",
   "dependencies": {
-    "@ts-fullstack-helpers/schema": "^0.0.0",
+    "@ts-fullstack-helpers/schema": "^0.0.1-alpha.0",
     "typescript": "^3.1.6"
   }
 }
