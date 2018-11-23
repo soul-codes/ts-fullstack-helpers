@@ -1,0 +1,12 @@
+{
+  "name": "@q0/api-endpoint-declaration-helper",
+  "version": "0.0.0",
+  "scripts": {
+    "prepare": "rm -rf dist && tsc",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "main": "dist",
+  "dependencies": {
+    "@q0/schema-validation-helper": "^0.0.0"
+  }
+}

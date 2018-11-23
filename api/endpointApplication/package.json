@@ -1,0 +1,17 @@
+{
+  "name": "@q0/api-endpoint-application-helper",
+  "version": "0.0.0",
+  "scripts": {
+    "prepare": "rm -rf dist && tsc",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "main": "dist",
+  "dependencies": {
+    "@q0/api-endpoint-declaration-helper": "^0.0.0",
+    "@q0/schema-validation-helper": "^0.0.0",
+    "@types/express": "^4.16.0",
+    "@types/ws": "^6.0.1",
+    "express": "^4.16.4",
+    "ws": "^6.1.0"
+  }
+}

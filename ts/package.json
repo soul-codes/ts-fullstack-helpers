@@ -1,0 +1,10 @@
+{
+  "name": "@q0/ts-helper",
+  "version": "0.0.0",
+  "scripts": {
+    "prepare": "rm -rf dist && tsc",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "main": "dist",
+  "dependencies": {}
+}
