@@ -1,5 +1,5 @@
 {
-  "name": "@q0/api-endpoint-declaration-helper",
+  "name": "@ts-fullstack-helpers/typings",
   "version": "0.0.0",
   "scripts": {
     "prepare": "rm -rf dist && tsc",
@@ -7,6 +7,6 @@
   },
   "main": "dist",
   "dependencies": {
-    "@q0/schema-validation-helper": "^0.0.0"
+    "typescript": "^3.1.6"
   }
 }

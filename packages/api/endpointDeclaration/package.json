@@ -1,5 +1,5 @@
 {
-  "name": "@q0/state-stream-client",
+  "name": "@ts-fullstack-helpers/define-endpoint",
   "version": "0.0.0",
   "scripts": {
     "prepare": "rm -rf dist && tsc",
@@ -7,6 +7,7 @@
   },
   "main": "dist",
   "dependencies": {
-    "isomorphic-ws": "^4.0.1"
+    "@ts-fullstack-helpers/schema": "^0.0.0",
+    "typescript": "^3.1.6"
   }
 }

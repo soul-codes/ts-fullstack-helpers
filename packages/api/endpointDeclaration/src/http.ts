@@ -1,4 +1,4 @@
-import { Schema, any, AnySchema } from "@q0/schema-validation-helper";
+import { Schema, any, AnySchema } from "@ts-fullstack-helpers/schema";
 import { BasePathBuilder } from "./common";
 
 export type HttpMethod = "post" | "get" | "put" | "delete";
@@ -12,7 +12,7 @@ export class HttpEndpoint<
   RequestBodySchema extends Schema = Schema,
   SuccessResponseType extends HttpBaseResponse = HttpBaseResponse,
   ErrorResponseType extends HttpBaseResponse = HttpBaseResponse
-> {
+  > {
   constructor(
     readonly method: Method,
     readonly route: string,
@@ -20,7 +20,7 @@ export class HttpEndpoint<
     readonly paramSchema: () => RequestPathParamSchema,
     readonly querySchema: () => RequestPathQuerySchema,
     readonly requestSchema: () => RequestBodySchema
-  ) {}
+  ) { }
 
   get "@requestPathParam"(): RequestPathParamSchema["@nativeType"] {
     return null as any;
@@ -50,11 +50,11 @@ export interface ProtoHttpEndpoint<
   RequestPathParamSchema extends Schema,
   RequestPathQuerySchema extends Schema,
   RequestBodySchema extends Schema
-> {
+  > {
   <
     SuccessResponseType extends HttpBaseResponse,
     ErrorResponseType extends HttpBaseResponse = never
-  >(): HttpEndpoint<
+    >(): HttpEndpoint<
     Method,
     BuildPath,
     RequestPathParamSchema,
@@ -62,7 +62,7 @@ export interface ProtoHttpEndpoint<
     RequestBodySchema,
     SuccessResponseType,
     ErrorResponseType
-  >;
+    >;
 }
 
 export function defineHttpEndpoint<
@@ -71,20 +71,20 @@ export function defineHttpEndpoint<
   PathParamSchema extends Schema = AnySchema,
   RequestBodySchema extends Schema = AnySchema,
   PathQuerySchema extends Schema = AnySchema
->(definition: {
-  method: Method;
-  path: string;
-  buildPath: ConstructRoute;
-  pathParamSchema?: PathParamSchema;
-  pathQuerySchema?: PathQuerySchema;
-  requestBodySchema?: RequestBodySchema;
-}): ProtoHttpEndpoint<
+  >(definition: {
+    method: Method;
+    path: string;
+    buildPath: ConstructRoute;
+    pathParamSchema?: PathParamSchema;
+    pathQuerySchema?: PathQuerySchema;
+    requestBodySchema?: RequestBodySchema;
+  }): ProtoHttpEndpoint<
   Method,
   ConstructRoute,
   PathParamSchema,
   PathQuerySchema,
   RequestBodySchema
-> {
+  > {
   return () =>
     new HttpEndpoint(
       definition.method,

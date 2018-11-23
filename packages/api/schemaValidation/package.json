@@ -1,10 +1,12 @@
 {
-  "name": "@q0/ts-helper",
+  "name": "@ts-fullstack-helpers/schema",
   "version": "0.0.0",
   "scripts": {
     "prepare": "rm -rf dist && tsc",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "main": "dist",
-  "dependencies": {}
+  "dependencies": {
+    "typescript": "^3.1.6"
+  }
 }

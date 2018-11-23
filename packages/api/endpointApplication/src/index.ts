@@ -1,4 +1,4 @@
-import { validate } from "@q0/schema-validation-helper";
+import { validate } from "@ts-fullstack-helpers/schema";
 import {
   Application,
   RequestHandler,
@@ -6,19 +6,19 @@ import {
   Response,
   NextFunction
 } from "express";
-import { HttpEndpoint } from "@q0/api-endpoint-declaration-helper";
+import { HttpEndpoint } from "@ts-fullstack-helpers/define-endpoint";
 
 export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
   constructor(
     readonly app: Application,
     readonly endpoint: Endpoint,
     readonly pathPrefix: string = ""
-  ) {}
+  ) { }
 
   use(...handlers: RequestHandler[]) {
     console.log(
       `Registering ${this.endpoint.method.toUpperCase()} ${this.pathPrefix +
-        this.endpoint.route}`
+      this.endpoint.route}`
     );
     this.app[this.endpoint.method](
       this.pathPrefix + this.endpoint.route,
@@ -36,8 +36,8 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
           response:
             | Endpoint["@successResponse"]
             | (Endpoint["@errorResponse"] extends void
-                ? never
-                : Endpoint["@errorResponse"])
+              ? never
+              : Endpoint["@errorResponse"])
         ) => void;
       },
       req: Request,
