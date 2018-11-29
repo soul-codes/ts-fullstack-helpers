@@ -79,7 +79,9 @@ export class StringSchema<Optional extends boolean = false> extends BaseSchema<
   validate(value: string) {
     const type = typeof value;
     if (type !== "string")
-      return { errorCode: "type" as "type", foundType: type };
+      return value == null && this.options.optional
+        ? null
+        : { errorCode: "type" as "type", foundType: type };
 
     const { length } = value;
     const { minLength, maxLength } = this.options;
@@ -133,7 +135,9 @@ export class NumberSchema<Optional extends boolean = false> extends BaseSchema<
   validate(value: number) {
     const type = typeof value;
     if (type !== "number")
-      return { errorCode: "type" as "type", foundType: type };
+      return value == null && this.options.optional
+        ? null
+        : { errorCode: "type" as "type", foundType: type };
 
     const { min, max } = this.options;
     if (
@@ -170,7 +174,9 @@ export class BooleanSchema<Optional extends boolean = false> extends BaseSchema<
   validate(value: any) {
     const type = typeof value;
     if (type !== "boolean")
-      return { errorCode: "type" as "type", foundType: type };
+      return value == null && this.options.optional
+        ? null
+        : { errorCode: "type" as "type", foundType: type };
     return null;
   }
 }
@@ -198,10 +204,12 @@ export class EnumSchema<
 
   validate(value: Values) {
     if (!this.values.includes(value))
-      return {
-        errorCode: "mismatch" as "mismatch",
-        allowedValues: this.values
-      };
+      return value == null && this.options.optional
+        ? null
+        : {
+            errorCode: "mismatch" as "mismatch",
+            allowedValues: this.values
+          };
     return null;
   }
 }
@@ -259,7 +267,9 @@ export class ObjectSchema<
   validate(value: any, recurse: RecurseValidation) {
     const type = typeof value;
     if (type !== "object" || !type)
-      return { errorCode: "type" as "type", foundType: type };
+      return value == null && this.options.optional
+        ? null
+        : { errorCode: "type" as "type", foundType: type };
 
     let hasProblems = false;
     const problems = Object.create(null) as inferObjectShapeProblem<Shape>;
@@ -321,7 +331,9 @@ export class ArraySchema<
 
   validate(value: any, recurse: RecurseValidation) {
     if (!Array.isArray(value)) {
-      return { errorCode: "type" as "type", foundType: typeof value };
+      return value == null && this.options.optional
+        ? null
+        : { errorCode: "type" as "type", foundType: typeof value };
     }
 
     const { length } = value;
