@@ -7,7 +7,7 @@ type RecurseValidation = (
   schema: ISchema<any, any, any>
 ) => any | null;
 
-type inferVoidType<Optional extends boolean> = Optional extends false
+export type inferVoidType<Optional extends boolean> = Optional extends false
   ? never
   : undefined;
 
@@ -26,7 +26,7 @@ interface StringOptions<Optional extends boolean = false> {
   optional?: Optional;
 }
 
-abstract class BaseSchema<
+export abstract class BaseSchema<
   TypeName extends string,
   NativeType,
   ErrorType,
