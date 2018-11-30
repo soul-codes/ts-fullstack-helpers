@@ -3,5 +3,5 @@
     "packages/**"
   ],
   "npmClient": "yarn",
-  "version": "0.0.2-dev.2"
+  "version": "0.0.2-dev.3"
 }
