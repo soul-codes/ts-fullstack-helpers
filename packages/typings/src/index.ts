@@ -1,3 +1,10 @@
+/**
+ * Makes a string/number/boolean literal an exact type. Not usually
+ * needed when assigning a literal to a constant but will be needed
+ * when returning exact values without type annotation on the return
+ * type, or when creating an ad-hoc object.
+ * @param value
+ */
 export function exact<T extends string | number | boolean>(value: T) {
   return value;
 }
