@@ -1,6 +1,6 @@
 {
   "name": "@ts-fullstack-helpers/typings",
-  "version": "0.0.2-dev.3",
+  "version": "0.0.2-dev.4",
   "publishConfig": {
     "access": "public"
   },
