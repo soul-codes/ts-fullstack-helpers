@@ -19,3 +19,8 @@ export type MaybePromise<T> = T | Promise<T>;
  * types verbatim.
  */
 export type Resolve<T> = T extends Promise<infer Resolved> ? Resolved : T;
+
+/**
+ * Represents every falsy value.
+ */
+export type Falsy = 0 | null | false | void | undefined | "";
