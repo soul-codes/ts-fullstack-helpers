@@ -1,0 +1,16 @@
+{
+  "name": "@ts-fullstack-helpers/stream",
+  "version": "0.0.2-dev.4",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepare": "rm -rf dist && tsc",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "main": "dist",
+  "dependencies": {
+    "@types/node": "^10.12.12",
+    "typescript": "^3.1.6"
+  }
+}
