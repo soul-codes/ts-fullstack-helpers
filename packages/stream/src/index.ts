@@ -22,7 +22,7 @@ export interface Readable<Chunk> {
   ): T;
   chain<ChainedChunk>(
     destination: Duplex<ChainedChunk, Chunk>
-  ): Duplex<Chunk, ChainedChunk>;
+  ): Duplex<ChainedChunk, Chunk>;
 
   addListener(event: "close", listener: () => void): this;
   addListener(event: "data", listener: (chunk: Chunk) => void): this;
