@@ -21,7 +21,7 @@ export interface Readable<Chunk> {
     options?: { end?: boolean }
   ): T;
   chain<ChainedChunk>(
-    destination: Writable<ChainedChunk>
+    destination: Duplex<ChainedChunk, Chunk>
   ): Duplex<Chunk, ChainedChunk>;
 
   addListener(event: "close", listener: () => void): this;
