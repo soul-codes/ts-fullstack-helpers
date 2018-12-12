@@ -288,4 +288,5 @@ function createChain(stream: Stream.Duplex): any {
       );
     };
   };
+  return stream;
 }
