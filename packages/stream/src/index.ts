@@ -287,6 +287,7 @@ function createChain(stream: Stream.Duplex): any {
         options
       );
     };
+    return proxy;
   };
   return stream;
 }
