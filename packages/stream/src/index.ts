@@ -16,10 +16,13 @@ export interface Readable<Chunk> {
   unshift(chunk: Chunk): void;
   push(chunk: Chunk, encooding?: string): boolean;
 
-  pipe<T extends Writable<Chunk> | Duplex<any, Chunk>>(
+  pipe<T extends Writable<Chunk>>(
     destination: T,
     options?: { end?: boolean }
   ): T;
+  chain<ChainedChunk>(
+    destination: Writable<ChainedChunk>
+  ): Duplex<Chunk, ChainedChunk>;
 
   addListener(event: "close", listener: () => void): this;
   addListener(event: "data", listener: (chunk: Chunk) => void): this;
@@ -265,7 +268,24 @@ export function strict<Chunk>(stream: Stream.Writable): Writable<Chunk>;
 export function strict<Read, Write>(stream: Stream.Duplex): Duplex<Read, Write>;
 export function strict<In, Out>(stream: Stream.Transform): Transform<In, Out>;
 export function strict(
-  stream: Stream.Transform | Stream.Readable | Stream.Writable | Stream.Duplex
+  stream: any
 ): Readable<any> | Writable<any> | Duplex<any, any> | Transform<any, any> {
-  return stream as any;
+  return createChain(stream);
+}
+
+function createChain(stream: Stream.Duplex): any {
+  (stream as any).chain = (dest: Stream.Writable) => {
+    const proxy = new Stream.PassThrough();
+    let chained: Stream;
+    proxy.on("pipe", (upstream: Stream.Readable) => {
+      upstream.unpipe(proxy);
+      chained = upstream.pipe(stream).pipe(dest);
+    });
+    proxy.pipe = function(dest, options) {
+      return chained.pipe(
+        dest,
+        options
+      );
+    };
+  };
 }
