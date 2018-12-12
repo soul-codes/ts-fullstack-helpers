@@ -254,13 +254,13 @@ export function writable<Chunk>(
 export function duplex<Read, Write>(
   options: DuplexOptions<Read, Write>
 ): Duplex<Read, Write> {
-  return new Stream.Duplex(options as any) as any;
+  return createChain(new Stream.Duplex(options as any));
 }
 
 export function transform<In, Out>(
   options: TransformOptions<In, Out>
 ): Transform<In, Out> {
-  return new Stream.Transform(options as any) as any;
+  return createChain(new Stream.Transform(options as any));
 }
 
 export function strict<Chunk>(stream: Stream.Readable): Readable<Chunk>;
