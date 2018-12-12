@@ -14,7 +14,7 @@ interface ReadableOptions<Chunk> {
 
 export interface Readable<Chunk> {
   unshift(chunk: Chunk): void;
-  push(chunk: Chunk, encooding?: string): boolean;
+  push(chunk: Chunk | null, encooding?: string): boolean;
 
   pipe<T extends Writable<Chunk>>(
     destination: T,
