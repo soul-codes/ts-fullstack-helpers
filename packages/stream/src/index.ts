@@ -269,3 +269,16 @@ export function strict(
 ): Readable<any> | Writable<any> | Duplex<any, any> | Transform<any, any> {
   return stream as any;
 }
+
+export async function buffer<Chunk>(
+  readable: Readable<Chunk>
+): Promise<Chunk[]> {
+  return new Promise<Chunk[]>((resolve, reject) => {
+    const result: Chunk[] = [];
+    readable.on("data", chunk => result.push(chunk));
+    readable.on("end", () => {
+      resolve(result);
+    });
+    readable.on("error", reject);
+  });
+}
