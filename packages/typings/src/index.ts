@@ -31,3 +31,14 @@ export type Resolve<T> = T extends Promise<infer Resolved> ? Resolved : T;
  * Represents every falsy value.
  */
 export type Falsy = 0 | null | false | void | undefined | "";
+
+/**
+ * Represents a value that could also be an array.
+ */
+export type MaybeArray<T> = T | Array<T>;
+
+/**
+ * Extracts the item type of a MaybeArray: if the type isn't an array,
+ * it is returned as is.
+ */
+export type MaybeArrayItem<T> = T extends Array<infer Item> ? Item : T;
