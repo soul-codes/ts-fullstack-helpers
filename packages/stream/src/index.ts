@@ -282,3 +282,12 @@ export async function buffer<Chunk>(
     readable.on("error", reject);
   });
 }
+
+export async function promise<
+  T extends Readable<any> | Writable<any> | Duplex<any, any>
+>(stream: T): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    stream.on("finish", () => resolve(stream));
+    stream.on("error", () => reject(stream));
+  });
+}
