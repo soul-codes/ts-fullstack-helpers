@@ -1,5 +1,13 @@
 import * as Stream from "stream";
 
+export interface Bufferable<Chunk> {
+  buffer(): Promise<Chunk[]>;
+}
+
+export interface Promisable {
+  promise(): Promise<void>;
+}
+
 interface ReadableOptions<Chunk> {
   highWaterMark?: number;
   encoding?: string;
@@ -12,7 +20,7 @@ interface ReadableOptions<Chunk> {
   ): void;
 }
 
-export interface Readable<Chunk> {
+export interface Readable<Chunk> extends Bufferable<Chunk>, Promisable {
   unshift(chunk: Chunk): void;
   push(chunk: Chunk, encooding?: string): boolean;
 
@@ -80,7 +88,10 @@ export interface Readable<Chunk> {
   ): this;
 }
 
-interface WritableOptions<Chunk> extends Stream.WritableOptions {
+interface WritableOptions<Chunk> {
+  highWaterMark?: number;
+  decodeStrings?: boolean;
+  objectMode?: boolean;
   write?(
     this: Writable<Chunk>,
     chunk: Chunk,
@@ -100,7 +111,7 @@ interface WritableOptions<Chunk> extends Stream.WritableOptions {
   final?(this: Writable<Chunk>, callback: (error?: Error | null) => void): void;
 }
 
-export interface Writable<Chunk> {
+export interface Writable<Chunk> extends Promisable {
   write(chunk: Chunk, cb?: (error: Error | null | undefined) => void): boolean;
   write(
     chunk: Chunk,
@@ -267,7 +278,10 @@ export function strict<In, Out>(stream: Stream.Transform): Transform<In, Out>;
 export function strict(
   stream: Stream.Transform | Stream.Readable | Stream.Writable | Stream.Duplex
 ): Readable<any> | Writable<any> | Duplex<any, any> | Transform<any, any> {
-  return stream as any;
+  return Object.assign(stream, {
+    buffer: () => buffer(stream as any),
+    promise: () => promise(stream as any)
+  }) as any;
 }
 
 export async function buffer<Chunk>(
