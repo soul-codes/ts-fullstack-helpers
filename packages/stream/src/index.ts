@@ -250,25 +250,25 @@ export interface Transform<In, Out> extends Duplex<Out, In> {}
 export function readable<Chunk>(
   options: ReadableOptions<Chunk>
 ): Readable<Chunk> {
-  return new Stream.Readable(options as any) as any;
+  return strict(new Stream.Readable(options as any)) as any;
 }
 
 export function writable<Chunk>(
   options: WritableOptions<Chunk>
 ): Writable<Chunk> {
-  return new Stream.Writable(options as any) as any;
+  return strict(new Stream.Writable(options as any)) as any;
 }
 
 export function duplex<Read, Write>(
   options: DuplexOptions<Read, Write>
 ): Duplex<Read, Write> {
-  return new Stream.Duplex(options as any) as any;
+  return strict(new Stream.Duplex(options as any)) as any;
 }
 
 export function transform<In, Out>(
   options: TransformOptions<In, Out>
 ): Transform<In, Out> {
-  return new Stream.Transform(options as any) as any;
+  return strict(new Stream.Transform(options as any)) as any;
 }
 
 export function strict<Chunk>(stream: Stream.Readable): Readable<Chunk>;
