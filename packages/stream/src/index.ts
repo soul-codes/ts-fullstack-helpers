@@ -1,7 +1,7 @@
 import * as Stream from "stream";
 
 export interface Bufferable<Chunk> {
-  buffer(): Promise<Chunk[]>;
+  promiseBuffer(): Promise<Chunk[]>;
 }
 
 export interface Promisable {
@@ -279,12 +279,12 @@ export function strict(
   stream: Stream.Transform | Stream.Readable | Stream.Writable | Stream.Duplex
 ): Readable<any> | Writable<any> | Duplex<any, any> | Transform<any, any> {
   return Object.assign(stream, {
-    buffer: () => buffer(stream as any),
+    promiseBuffer: () => promiseBuffer(stream as any),
     promise: () => promise(stream as any)
   }) as any;
 }
 
-export async function buffer<Chunk>(
+export async function promiseBuffer<Chunk>(
   readable: Readable<Chunk>
 ): Promise<Chunk[]> {
   return new Promise<Chunk[]>((resolve, reject) => {
