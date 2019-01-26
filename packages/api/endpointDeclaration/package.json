@@ -1,6 +1,6 @@
 {
   "name": "@ts-fullstack-helpers/define-endpoint",
-  "version": "0.1.0",
+  "version": "0.2.0-alpha.0",
   "publishConfig": {
     "access": "public"
   },
@@ -10,7 +10,7 @@
   },
   "main": "dist",
   "dependencies": {
-    "@ts-fullstack-helpers/schema": "^0.1.0",
+    "@ts-fullstack-helpers/schema": "^0.2.0-alpha.0",
     "typescript": "^3.1.6"
   }
 }
