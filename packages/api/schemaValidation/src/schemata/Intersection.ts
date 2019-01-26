@@ -2,11 +2,11 @@ import {
   BaseSchema,
   RecurseValidation,
   ValidationResult,
-  inferVoidType
+  inferVoidType,
+  ISchema
 } from "./Base";
-import { ObjectSchema } from "./Object";
 
-type Schema = ObjectSchema<any, false>;
+type Schema = ISchema<any, any, any>;
 
 export interface IntersectionOptions<Optional extends boolean = false> {
   optional?: Optional;
