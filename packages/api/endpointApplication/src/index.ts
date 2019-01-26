@@ -68,6 +68,7 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
             badEntity: "path-query",
             details: queryValidation.error
           });
+          return;
         }
 
         const body: Endpoint["@requestBody"] = req.body;
