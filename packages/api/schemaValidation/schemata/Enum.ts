@@ -22,14 +22,22 @@ export class EnumSchema<
   }
 
   validate(value: Values) {
-    if (!this.values.includes(value))
-      return value == null && this.options.optional
-        ? null
-        : {
-            errorCode: "mismatch" as "mismatch",
-            allowedValues: this.values
-          };
-    return null;
+    if (
+      !this.values.includes(value) &&
+      !(value == null && this.options.optional)
+    )
+      return {
+        ok: false as false,
+        error: {
+          errorCode: "mismatch" as "mismatch",
+          allowedValues: this.values
+        }
+      };
+
+    return {
+      ok: true as true,
+      value: value == null ? (null as any) : value
+    };
   }
 }
 

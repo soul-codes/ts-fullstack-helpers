@@ -42,8 +42,11 @@ export class ArraySchema<
   validate(value: any, recurse: RecurseValidation) {
     if (!Array.isArray(value)) {
       return value == null && this.options.optional
-        ? null
-        : { errorCode: "type" as "type", foundType: typeof value };
+        ? { ok: true as true, value: null as any }
+        : {
+            ok: false as false,
+            error: { errorCode: "type" as "type", foundType: typeof value }
+          };
     }
 
     const { length } = value;
@@ -53,15 +56,18 @@ export class ArraySchema<
       (typeof maxLength === "number" && length > maxLength)
     ) {
       return {
-        errorCode: "length" as "length",
-        length,
-        ...({
-          minLength,
-          maxLength
-        } as
-          | { minLength: number }
-          | { maxLength: number }
-          | { minLength: number; maxLength: number })
+        ok: false as false,
+        error: {
+          errorCode: "length" as "length",
+          length,
+          ...({
+            minLength,
+            maxLength
+          } as
+            | { minLength: number }
+            | { maxLength: number }
+            | { minLength: number; maxLength: number })
+        }
       };
     }
 
@@ -69,17 +75,26 @@ export class ArraySchema<
       index: number;
       error: Item["@errorType"];
     }[] = [];
+    const parsed: Item["@nativeType"][] = [];
     const { item } = this;
     for (let i = 0, length = value.length; i < length; i++) {
-      const problem = recurse(value[i], item);
-      if (problem) {
-        problems.push({ index: i, error: problem } as any);
+      const result = recurse(value[i], item);
+      if (result.ok) {
+        parsed.push(result.value);
+      } else {
+        problems.push({ index: i, error: result.error } as any);
       }
     }
 
     return problems.length
-      ? { errorCode: "children" as "children", childErrors: problems }
-      : null;
+      ? {
+          ok: false as false,
+          error: { errorCode: "children" as "children", childErrors: problems }
+        }
+      : {
+          ok: true as true,
+          value: parsed
+        };
   }
 }
 

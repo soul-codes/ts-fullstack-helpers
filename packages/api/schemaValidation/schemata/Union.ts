@@ -23,11 +23,14 @@ export class UnionSchema<Types extends Schema[]> extends BaseSchema<
     const errors: (ArrayItem<Types>["@errorType"])[] = [];
     for (let i = 0; i < this.types.length; i++) {
       const type = this.types[i];
-      const error = recurse(value, type);
-      if (!error) return null;
-      errors.push(error as any);
+      const result = recurse(value, type);
+      if (result.ok) return { ok: true as true, value: result.value };
+      errors.push(result.error as any);
     }
-    return { errorCode: "type" as "type", childErrors: errors };
+    return {
+      ok: false as false,
+      error: { errorCode: "type" as "type", childErrors: errors }
+    };
   }
 }
 

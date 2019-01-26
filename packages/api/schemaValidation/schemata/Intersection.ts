@@ -1,6 +1,7 @@
-import { ISchema, BaseSchema, RecurseValidation } from "./Base";
+import { BaseSchema, RecurseValidation } from "./Base";
+import { ObjectSchema } from "./Object";
 
-type Schema = ISchema<any, any, any>;
+type Schema = ObjectSchema<any, any>;
 
 export class IntersectionSchema<Types extends Schema[]> extends BaseSchema<
   "intersection",
@@ -23,12 +24,15 @@ export class IntersectionSchema<Types extends Schema[]> extends BaseSchema<
     const errors: (ArrayItem<Types>["@errorType"])[] = [];
     for (let i = 0; i < this.types.length; i++) {
       const type = this.types[i];
-      const error = recurse(value, type);
-      error && errors.push(error as any);
+      const result = recurse(value, type);
+      !result.ok && errors.push(result.error as any);
     }
     return errors.length
-      ? { errorCode: "type" as "type", childErrors: errors }
-      : null;
+      ? {
+          ok: false as false,
+          error: { errorCode: "type" as "type", childErrors: errors }
+        }
+      : { ok: true as true, value: value };
   }
 }
 
@@ -42,9 +46,7 @@ type unionToIntersection<U> = (U extends any
   ? I
   : never;
 
-type getNativeTypes<T> = T extends ISchema<any, any, any>
-  ? T["@nativeType"]
-  : never;
+type getNativeTypes<T> = T extends Schema ? T["@nativeType"] : never;
 
 type ArrayItem<T extends Array<any>> = T extends Array<infer Item>
   ? Item

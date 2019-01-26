@@ -4,8 +4,8 @@ export class AnySchema extends BaseSchema<"any", any, any, {}> {
   get typeName() {
     return "any" as "any";
   }
-  validate() {
-    return null;
+  validate(value: any) {
+    return { ok: true as true, value: value };
   }
 }
 

@@ -1,7 +1,7 @@
 export type RecurseValidation = (
   value: any,
   schema: ISchema<any, any, any>
-) => any | null;
+) => { ok: false; error: any } | { ok: true; value: any };
 
 export type inferVoidType<Optional extends boolean> = Optional extends false
   ? never
@@ -12,7 +12,10 @@ export interface ISchema<TypeName, NativeType, ErrorType> {
   readonly typeName: TypeName;
   readonly "@nativeType": NativeType;
   readonly "@errorType": ErrorType;
-  validate(value: any, recurse: RecurseValidation): ErrorType | null;
+  validate(
+    value: any,
+    recurse: RecurseValidation
+  ): { ok: false; error: ErrorType } | { ok: true; value: NativeType };
 }
 
 export abstract class BaseSchema<
@@ -33,7 +36,10 @@ export abstract class BaseSchema<
     return null as any;
   }
 
-  abstract validate(value: any, recurse: RecurseValidation): ErrorType | null;
+  abstract validate(
+    value: any,
+    recurse: RecurseValidation
+  ): { ok: false; error: ErrorType } | { ok: true; value: NativeType };
 
   /**
    * Returns the same schema back with a nominal value type of your choice.

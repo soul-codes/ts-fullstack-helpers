@@ -29,8 +29,11 @@ export class StringSchema<Optional extends boolean = false> extends BaseSchema<
     const type = typeof value;
     if (type !== "string")
       return value == null && this.options.optional
-        ? null
-        : { errorCode: "type" as "type", foundType: type };
+        ? { ok: true as true, value: null as any }
+        : {
+            ok: false as false,
+            error: { errorCode: "type" as "type", foundType: type }
+          };
 
     const { length } = value;
     const { minLength, maxLength } = this.options;
@@ -39,26 +42,32 @@ export class StringSchema<Optional extends boolean = false> extends BaseSchema<
       (typeof maxLength === "number" && length > maxLength)
     ) {
       return {
-        errorCode: "length" as "length",
-        length,
-        ...({
-          minLength,
-          maxLength
-        } as
-          | { minLength: number }
-          | { maxLength: number }
-          | { minLength: number; maxLength: number })
+        ok: false as false,
+        error: {
+          errorCode: "length" as "length",
+          length,
+          ...({
+            minLength,
+            maxLength
+          } as
+            | { minLength: number }
+            | { maxLength: number }
+            | { minLength: number; maxLength: number })
+        }
       };
     }
 
     const { pattern } = this.options;
     if (pattern && !pattern.test(value)) {
       return {
-        errorCode: "pattern" as "pattern"
+        ok: false as false,
+        error: {
+          errorCode: "pattern" as "pattern"
+        }
       };
     }
 
-    return null;
+    return { ok: true as true, value: value };
   }
 }
 

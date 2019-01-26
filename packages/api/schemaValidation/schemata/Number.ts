@@ -23,8 +23,11 @@ export class NumberSchema<Optional extends boolean = false> extends BaseSchema<
     const type = typeof value;
     if (type !== "number")
       return value == null && this.options.optional
-        ? null
-        : { errorCode: "type" as "type", foundType: type };
+        ? { ok: true as true, value: null as any }
+        : {
+            ok: false as false,
+            error: { errorCode: "type" as "type", foundType: type }
+          };
 
     const { min, max } = this.options;
     if (
@@ -32,15 +35,18 @@ export class NumberSchema<Optional extends boolean = false> extends BaseSchema<
       (typeof max === "number" && value > max)
     ) {
       return {
-        errorCode: "range" as "range",
-        ...({
-          min,
-          max
-        } as { min: number } | { max: number } | { min: number; max: number })
+        ok: false as false,
+        error: {
+          errorCode: "range" as "range",
+          ...({
+            min,
+            max
+          } as { min: number } | { max: number } | { min: number; max: number })
+        }
       };
     }
 
-    return null;
+    return { ok: true as true, value: value };
   }
 }
 

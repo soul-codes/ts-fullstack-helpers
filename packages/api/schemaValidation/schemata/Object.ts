@@ -56,27 +56,36 @@ export class ObjectSchema<
     const type = typeof value;
     if (type !== "object" || !type)
       return value == null && this.options.optional
-        ? null
-        : { errorCode: "type" as "type", foundType: type };
+        ? { ok: true as true, value: null as any }
+        : {
+            ok: false as false,
+            error: { errorCode: "type" as "type", foundType: type }
+          };
 
     let hasProblems = false;
     const problems = Object.create(null) as inferObjectShapeProblem<Shape>;
+    const parsed = Object.create(null) as inferObjectNativeType<Shape>;
     const { shape } = this;
     for (const key in shape) {
       const prop = Object.prototype.hasOwnProperty.call(value, key)
         ? value[key]
         : void 0;
       const schema = shape[key];
-      const problem = recurse(prop, schema);
-      if (problem) {
+      const result = recurse(prop, schema);
+      if (result.ok) {
+        (parsed as any)[key] = result.value;
+      } else {
         hasProblems = true;
-        problems[key] = problem as any;
+        problems[key] = result.error as any;
       }
     }
 
     return hasProblems
-      ? { errorCode: "children" as "children", childErrors: problems }
-      : null;
+      ? {
+          ok: false as false,
+          error: { errorCode: "children" as "children", childErrors: problems }
+        }
+      : { ok: true as true, value: parsed };
   }
 }
 

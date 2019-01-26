@@ -16,11 +16,17 @@ export class BooleanSchema<Optional extends boolean = false> extends BaseSchema<
 
   validate(value: any) {
     const type = typeof value;
-    if (type !== "boolean")
-      return value == null && this.options.optional
-        ? null
-        : { errorCode: "type" as "type", foundType: type };
-    return null;
+    if (type !== "boolean" && !(value == null && this.options.optional)) {
+      return {
+        ok: false as false,
+        error: { errorCode: "type" as "type", foundType: type }
+      };
+    }
+
+    return {
+      ok: true as true,
+      value: value == null ? null : value
+    };
   }
 }
 
