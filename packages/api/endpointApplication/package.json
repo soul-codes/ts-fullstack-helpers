@@ -1,6 +1,6 @@
 {
   "name": "@ts-fullstack-helpers/express-endpoint",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -10,8 +10,8 @@
   },
   "main": "dist",
   "dependencies": {
-    "@ts-fullstack-helpers/define-endpoint": "^0.2.0-alpha.1",
-    "@ts-fullstack-helpers/schema": "^0.2.0-alpha.1",
+    "@ts-fullstack-helpers/define-endpoint": "^0.2.0-alpha.2",
+    "@ts-fullstack-helpers/schema": "^0.2.0-alpha.2",
     "@types/express": "^4.16.0",
     "@types/ws": "^6.0.1",
     "express": "^4.16.4",
