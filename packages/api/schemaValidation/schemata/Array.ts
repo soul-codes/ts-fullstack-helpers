@@ -1,4 +1,10 @@
-import { ISchema, BaseSchema, inferVoidType, RecurseValidation } from "./Base";
+import {
+  ISchema,
+  BaseSchema,
+  inferVoidType,
+  RecurseValidation,
+  ValidationResult
+} from "./Base";
 
 type Schema = ISchema<string, any, any>;
 
@@ -8,12 +14,11 @@ export interface ArrayOptions<Optional extends boolean = false> {
   optional?: Optional;
 }
 
-export class ArraySchema<
-  Item extends Schema,
-  Optional extends boolean = false
-> extends BaseSchema<
-  "array",
-  Array<Item["@nativeType"]> | inferVoidType<Optional>,
+export type ArraySchemaValue<Item extends Schema, Optional extends boolean> =
+  | Array<Item["@nativeType"]>
+  | inferVoidType<Optional>;
+
+export type ArraySchemaError<Item extends Schema> =
   | { errorCode: "type"; foundType: string }
   | ({
       errorCode: "length";
@@ -28,7 +33,15 @@ export class ArraySchema<
         index: number;
         error: Item["@errorType"];
       }[];
-    },
+    };
+
+export class ArraySchema<
+  Item extends Schema,
+  Optional extends boolean = false
+> extends BaseSchema<
+  "array",
+  ArraySchemaValue<Item, Optional>,
+  ArraySchemaError<Item>,
   ArrayOptions<Optional>
 > {
   constructor(readonly item: Item, options: ArrayOptions<Optional>) {
@@ -39,12 +52,18 @@ export class ArraySchema<
     return "array" as "array";
   }
 
-  validate(value: any, recurse: RecurseValidation) {
+  validate(
+    value: any,
+    recurse: RecurseValidation
+  ): ValidationResult<
+    ArraySchemaValue<Item, Optional>,
+    ArraySchemaError<Item>
+  > {
     if (!Array.isArray(value)) {
       return value == null && this.options.optional
-        ? { ok: true as true, value: null as any }
+        ? { ok: true, value: void 0 as inferVoidType<Optional> }
         : {
-            ok: false as false,
+            ok: false,
             error: { errorCode: "type" as "type", foundType: typeof value }
           };
     }
@@ -56,7 +75,7 @@ export class ArraySchema<
       (typeof maxLength === "number" && length > maxLength)
     ) {
       return {
-        ok: false as false,
+        ok: false,
         error: {
           errorCode: "length" as "length",
           length,
@@ -88,11 +107,11 @@ export class ArraySchema<
 
     return problems.length
       ? {
-          ok: false as false,
+          ok: false,
           error: { errorCode: "children" as "children", childErrors: problems }
         }
       : {
-          ok: true as true,
+          ok: true,
           value: parsed
         };
   }

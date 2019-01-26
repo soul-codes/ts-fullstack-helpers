@@ -1,15 +1,21 @@
-import { BaseSchema, RecurseValidation } from "./Base";
+import { BaseSchema, RecurseValidation, ValidationResult } from "./Base";
 import { ObjectSchema } from "./Object";
 
 type Schema = ObjectSchema<any, any>;
 
+export type IntersectionSchemaValue<Types extends Schema[]> = getNativeTypes<
+  unionToIntersection<ArrayItem<Types>>
+>;
+
+export type IntersectionSchemaError<Types extends Schema[]> = {
+  errorCode: "type";
+  childErrors: (ArrayItem<Types>["@errorType"])[];
+};
+
 export class IntersectionSchema<Types extends Schema[]> extends BaseSchema<
   "intersection",
-  getNativeTypes<unionToIntersection<ArrayItem<Types>>>,
-  {
-    errorCode: "type";
-    childErrors: (ArrayItem<Types>["@errorType"])[];
-  },
+  IntersectionSchemaValue<Types>,
+  IntersectionSchemaError<Types>,
   {}
 > {
   constructor(readonly types: Types) {
@@ -20,7 +26,13 @@ export class IntersectionSchema<Types extends Schema[]> extends BaseSchema<
     return "intersection" as "intersection";
   }
 
-  validate(value: any, recurse: RecurseValidation) {
+  validate(
+    value: any,
+    recurse: RecurseValidation
+  ): ValidationResult<
+    IntersectionSchemaValue<Types>,
+    IntersectionSchemaError<Types>
+  > {
     const errors: (ArrayItem<Types>["@errorType"])[] = [];
     for (let i = 0; i < this.types.length; i++) {
       const type = this.types[i];

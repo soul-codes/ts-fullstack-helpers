@@ -1,11 +1,15 @@
 export type RecurseValidation = (
   value: any,
   schema: ISchema<any, any, any>
-) => { ok: false; error: any } | { ok: true; value: any };
+) => ValidationResult<any, any>;
 
 export type inferVoidType<Optional extends boolean> = Optional extends false
   ? never
   : undefined;
+
+export type ValidationResult<Value, Error> =
+  | { ok: false; error: Error }
+  | { ok: true; value: Value };
 
 export type Schema = ISchema<any, any, any>;
 
@@ -17,7 +21,7 @@ export interface ISchema<TypeName, NativeType, ErrorType> {
   validate(
     value: any,
     recurse: RecurseValidation
-  ): { ok: false; error: ErrorType } | { ok: true; value: NativeType };
+  ): ValidationResult<NativeType, ErrorType>;
 }
 
 export abstract class BaseSchema<

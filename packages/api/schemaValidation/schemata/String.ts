@@ -1,4 +1,4 @@
-import { BaseSchema, inferVoidType } from "./Base";
+import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
 
 export interface StringOptions<Optional extends boolean = false> {
   minLength?: number;
@@ -7,9 +7,7 @@ export interface StringOptions<Optional extends boolean = false> {
   optional?: Optional;
 }
 
-export class StringSchema<Optional extends boolean = false> extends BaseSchema<
-  "string",
-  string | inferVoidType<Optional>,
+export type StringSchemaError =
   | ({
       errorCode: "length";
       length: number;
@@ -18,20 +16,34 @@ export class StringSchema<Optional extends boolean = false> extends BaseSchema<
       | { maxLength: number }
       | { minLength: number; maxLength: number }))
   | { errorCode: "type"; foundType: string }
-  | { errorCode: "pattern" },
+  | { errorCode: "pattern" };
+
+export type StringSchemaValue<Optional extends boolean> =
+  | string
+  | inferVoidType<Optional>;
+
+export class StringSchema<Optional extends boolean = false> extends BaseSchema<
+  "string",
+  StringSchemaValue<Optional>,
+  StringSchemaError,
   StringOptions<Optional>
 > {
   get typeName() {
     return "string" as "string";
   }
 
-  validate(value: string) {
+  validate(
+    value: string
+  ): ValidationResult<StringSchemaValue<Optional>, StringSchemaError> {
     const type = typeof value;
     if (type !== "string")
       return value == null && this.options.optional
-        ? { ok: true as true, value: null as any }
+        ? {
+            ok: true,
+            value: void 0 as inferVoidType<Optional>
+          }
         : {
-            ok: false as false,
+            ok: false,
             error: { errorCode: "type" as "type", foundType: type }
           };
 
@@ -42,7 +54,7 @@ export class StringSchema<Optional extends boolean = false> extends BaseSchema<
       (typeof maxLength === "number" && length > maxLength)
     ) {
       return {
-        ok: false as false,
+        ok: false,
         error: {
           errorCode: "length" as "length",
           length,
@@ -60,14 +72,17 @@ export class StringSchema<Optional extends boolean = false> extends BaseSchema<
     const { pattern } = this.options;
     if (pattern && !pattern.test(value)) {
       return {
-        ok: false as false,
+        ok: false,
         error: {
           errorCode: "pattern" as "pattern"
         }
       };
     }
 
-    return { ok: true as true, value: value };
+    return {
+      ok: true,
+      value: value
+    };
   }
 }
 

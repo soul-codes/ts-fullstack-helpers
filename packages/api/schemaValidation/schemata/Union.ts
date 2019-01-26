@@ -1,14 +1,25 @@
-import { ISchema, BaseSchema, RecurseValidation } from "./Base";
+import {
+  ISchema,
+  BaseSchema,
+  RecurseValidation,
+  ValidationResult
+} from "./Base";
 
 type Schema = ISchema<any, any, any>;
 
+export type UnionSchemaValue<Types extends Schema[]> = ArrayItem<
+  Types
+>["@nativeType"];
+
+export type UnionSchemaError<Types extends Schema[]> = {
+  errorCode: "type";
+  childErrors: (ArrayItem<Types>["@errorType"])[];
+};
+
 export class UnionSchema<Types extends Schema[]> extends BaseSchema<
   "union",
-  ArrayItem<Types>["@nativeType"],
-  {
-    errorCode: "type";
-    childErrors: (ArrayItem<Types>["@errorType"])[];
-  },
+  UnionSchemaValue<Types>,
+  UnionSchemaError<Types>,
   {}
 > {
   constructor(readonly types: Types) {
@@ -19,16 +30,19 @@ export class UnionSchema<Types extends Schema[]> extends BaseSchema<
     return "union" as "union";
   }
 
-  validate(value: any, recurse: RecurseValidation) {
+  validate(
+    value: any,
+    recurse: RecurseValidation
+  ): ValidationResult<UnionSchemaValue<Types>, UnionSchemaError<Types>> {
     const errors: (ArrayItem<Types>["@errorType"])[] = [];
     for (let i = 0; i < this.types.length; i++) {
       const type = this.types[i];
       const result = recurse(value, type);
-      if (result.ok) return { ok: true as true, value: result.value };
+      if (result.ok) return { ok: true, value: result.value };
       errors.push(result.error as any);
     }
     return {
-      ok: false as false,
+      ok: false,
       error: { errorCode: "type" as "type", childErrors: errors }
     };
   }

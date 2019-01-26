@@ -1,31 +1,39 @@
-import { BaseSchema, inferVoidType } from "./Base";
+import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
 
 export interface BooleanOptions<Optional extends boolean = false> {
   optional?: Optional;
 }
 
+export type BooleanSchemaError = { errorCode: "type"; foundType: string };
+
+export type BooleanSchemaValue<Optional extends boolean> =
+  | boolean
+  | inferVoidType<Optional>;
+
 export class BooleanSchema<Optional extends boolean = false> extends BaseSchema<
   "boolean",
-  boolean | inferVoidType<Optional>,
-  { errorCode: "type"; foundType: string },
+  BooleanSchemaValue<Optional>,
+  BooleanSchemaError,
   BooleanOptions<Optional>
 > {
   get typeName() {
     return "boolean" as "boolean";
   }
 
-  validate(value: any) {
+  validate(
+    value: any
+  ): ValidationResult<BooleanSchemaValue<Optional>, BooleanSchemaError> {
     const type = typeof value;
     if (type !== "boolean" && !(value == null && this.options.optional)) {
       return {
-        ok: false as false,
+        ok: false,
         error: { errorCode: "type" as "type", foundType: type }
       };
     }
 
     return {
-      ok: true as true,
-      value: value == null ? null : value
+      ok: true,
+      value: value == null ? void 0 : value
     };
   }
 }

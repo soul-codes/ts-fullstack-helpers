@@ -1,16 +1,28 @@
-import { BaseSchema, inferVoidType } from "./Base";
+import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
 
 export interface EnumOptions<Optional extends boolean = false> {
   optional?: Optional;
 }
 
+export type EnumValue = string | boolean | number;
+
+export type EnumSchemaValue<
+  Values extends EnumValue,
+  Optional extends boolean
+> = Values | inferVoidType<Optional>;
+
+export type EnumSchemaError<Values extends EnumValue> = {
+  errorCode: "mismatch";
+  allowedValues: Values[];
+};
+
 export class EnumSchema<
-  Values extends string | boolean | number,
+  Values extends EnumValue,
   Optional extends boolean = false
 > extends BaseSchema<
   "enum",
-  Values | inferVoidType<Optional>,
-  { errorCode: "mismatch"; allowedValues: Values[] },
+  EnumSchemaValue<Values, Optional>,
+  EnumSchemaError<Values>,
   EnumOptions<Optional>
 > {
   constructor(readonly values: Values[], options: EnumOptions<Optional> = {}) {
@@ -21,13 +33,18 @@ export class EnumSchema<
     return "enum" as "enum";
   }
 
-  validate(value: Values) {
+  validate(
+    value: Values
+  ): ValidationResult<
+    EnumSchemaValue<Values, Optional>,
+    EnumSchemaError<Values>
+  > {
     if (
       !this.values.includes(value) &&
       !(value == null && this.options.optional)
     )
       return {
-        ok: false as false,
+        ok: false,
         error: {
           errorCode: "mismatch" as "mismatch",
           allowedValues: this.values
@@ -35,8 +52,8 @@ export class EnumSchema<
       };
 
     return {
-      ok: true as true,
-      value: value == null ? (null as any) : value
+      ok: true,
+      value: value == null ? (void 0 as inferVoidType<Optional>) : value
     };
   }
 }

@@ -1,4 +1,4 @@
-import { BaseSchema, inferVoidType } from "./Base";
+import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
 
 export interface NumberOptions<Optional extends boolean = false> {
   min?: number;
@@ -6,24 +6,32 @@ export interface NumberOptions<Optional extends boolean = false> {
   optional?: Optional;
 }
 
-export class NumberSchema<Optional extends boolean = false> extends BaseSchema<
-  "number",
-  number | inferVoidType<Optional>,
+export type NumberSchemaValue<Optional extends boolean> =
+  | number
+  | inferVoidType<Optional>;
+export type NumberSchemaError =
   | ({
       errorCode: "range";
     } & ({ min: number } | { max: number } | { min: number; max: number }))
-  | { errorCode: "type"; foundType: string },
+  | { errorCode: "type"; foundType: string };
+
+export class NumberSchema<Optional extends boolean = false> extends BaseSchema<
+  "number",
+  NumberSchemaValue<Optional>,
+  NumberSchemaError,
   NumberOptions<Optional>
 > {
   get typeName() {
     return "number" as "number";
   }
 
-  validate(value: number) {
+  validate(
+    value: number
+  ): ValidationResult<NumberSchemaValue<Optional>, NumberSchemaError> {
     const type = typeof value;
     if (type !== "number")
       return value == null && this.options.optional
-        ? { ok: true as true, value: null as any }
+        ? { ok: true as true, value: void 0 as inferVoidType<Optional> }
         : {
             ok: false as false,
             error: { errorCode: "type" as "type", foundType: type }
