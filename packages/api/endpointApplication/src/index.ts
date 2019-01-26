@@ -13,12 +13,12 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
     readonly app: Application,
     readonly endpoint: Endpoint,
     readonly pathPrefix: string = ""
-  ) { }
+  ) {}
 
   use(...handlers: RequestHandler[]) {
     console.log(
       `Registering ${this.endpoint.method.toUpperCase()} ${this.pathPrefix +
-      this.endpoint.route}`
+        this.endpoint.route}`
     );
     this.app[this.endpoint.method](
       this.pathPrefix + this.endpoint.route,
@@ -36,8 +36,8 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
           response:
             | Endpoint["@successResponse"]
             | (Endpoint["@errorResponse"] extends void
-              ? never
-              : Endpoint["@errorResponse"])
+                ? never
+                : Endpoint["@errorResponse"])
         ) => void;
       },
       req: Request,
@@ -49,7 +49,7 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
       try {
         const params: Endpoint["@requestPathParam"] = req.params;
         const paramValidation = validate(params, this.endpoint.paramSchema());
-        if (paramValidation.error) {
+        if (!paramValidation.ok) {
           res.status(400);
           res.send({
             errorCode: "bad-request",
@@ -61,7 +61,7 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
 
         const query: Endpoint["@requestPathQuery"] = req.query;
         const queryValidation = validate(query, this.endpoint.querySchema());
-        if (queryValidation.error) {
+        if (!queryValidation.ok) {
           res.status(400);
           res.send({
             errorCode: "bad-request",
@@ -72,7 +72,7 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
 
         const body: Endpoint["@requestBody"] = req.body;
         const bodyValidation = validate(body, this.endpoint.requestSchema());
-        if (bodyValidation.error) {
+        if (!bodyValidation.ok) {
           res.status(400);
           res.send({
             errorCode: "bad-request",

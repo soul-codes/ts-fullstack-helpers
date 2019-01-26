@@ -7,6 +7,8 @@ export type inferVoidType<Optional extends boolean> = Optional extends false
   ? never
   : undefined;
 
+export type Schema = ISchema<any, any, any>;
+
 export interface ISchema<TypeName, NativeType, ErrorType> {
   readonly options: {};
   readonly typeName: TypeName;
