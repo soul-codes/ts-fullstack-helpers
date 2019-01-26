@@ -7,4 +7,5 @@ export * from "./Intersection";
 export * from "./Number";
 export * from "./Object";
 export * from "./String";
+export * from "./Stringified";
 export * from "./Union";
