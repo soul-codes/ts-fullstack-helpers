@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "../dist",
     "module": "commonjs",
     "target": "es2017",
     "strict": true,
@@ -8,7 +8,5 @@
     "noImplicitAny": true,
     "declaration": true
   },
-  "exclude": [
-    "dist"
-  ]
+  "include": ["."]
 }

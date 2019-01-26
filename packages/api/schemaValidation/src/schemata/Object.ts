@@ -94,7 +94,7 @@ export class ObjectSchema<
       const schema = shape[key];
       const result = recurse(prop, schema);
       if (result.ok) {
-        (parsed as Shape)[key] = result.value;
+        (parsed as any)[key] = result.value;
       } else {
         hasProblems = true;
         problems[key] = result.error as ObjectSchemaError<Shape>;

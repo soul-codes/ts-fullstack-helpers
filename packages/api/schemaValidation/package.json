@@ -5,8 +5,9 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "rm -rf dist && tsc",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "prepare": "rm -rf dist && yarn tsc",
+    "tsc": "tsc --project src",
+    "watch": "yarn tsc --watch --preserveWatchOutput"
   },
   "main": "dist",
   "dependencies": {

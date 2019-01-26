@@ -5,7 +5,7 @@ export type RecurseValidation = (
 
 export type inferVoidType<Optional extends boolean> = Optional extends false
   ? never
-  : undefined;
+  : undefined | void;
 
 export type ValidationResult<Value, Error> =
   | { ok: false; error: Error }
