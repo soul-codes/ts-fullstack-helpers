@@ -85,9 +85,9 @@ export class ExpressEndpointApplication<Endpoint extends HttpEndpoint> {
 
         await handler(
           {
-            params,
-            body,
-            query,
+            params: paramValidation.value,
+            body: bodyValidation.value,
+            query: queryValidation.value,
             reply(
               result: Endpoint["@successResponse"] | Endpoint["@errorResponse"]
             ) {
