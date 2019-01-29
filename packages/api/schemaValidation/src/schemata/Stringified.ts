@@ -80,7 +80,7 @@ export class StringifiedSchema<
       };
     }
 
-    return result.value;
+    return result;
   }
 }
 
