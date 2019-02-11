@@ -11,8 +11,9 @@ interface StringifiedOptions<Optional extends boolean = false> {
 }
 
 export type StringifiedSchemaValue<
-  Parsed extends Schema
-> = Parsed["@nativeType"];
+  Parsed extends Schema,
+  Optional extends boolean
+> = Parsed["@nativeType"] | inferVoidType<Optional>;
 
 export type StringifiedSchemaError<Parsed extends Schema> =
   | { errorCode: "type"; foundType: string }
@@ -27,7 +28,7 @@ export class StringifiedSchema<
   Optional extends boolean = false
 > extends BaseSchema<
   "stringified",
-  StringifiedSchemaValue<Parsed>,
+  StringifiedSchemaValue<Parsed, Optional>,
   StringifiedSchemaError<Parsed>,
   StringifiedOptions<Optional>
 > {
@@ -46,7 +47,7 @@ export class StringifiedSchema<
     value: any,
     recurse: RecurseValidation
   ): ValidationResult<
-    StringifiedSchemaValue<Parsed>,
+    StringifiedSchemaValue<Parsed, Optional>,
     StringifiedSchemaError<Parsed>
   > {
     const type = typeof value;
