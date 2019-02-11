@@ -7,7 +7,8 @@ import {
   choiceOf,
   number,
   shape,
-  string
+  string,
+  stringified
 } from "../src";
 
 type TRUE = { true: true };
@@ -262,6 +263,45 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: string }> => TRUE;
   (): isMatched<Check, { foo: string; bar: string }> => TRUE;
   (): isMatched<Check, { bar: string }> => FALSE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => TRUE;
+}
+
+/**
+ * stringified
+ */
+{
+  const x = stringified(number());
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => TRUE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, { foo: string }> => FALSE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => FALSE;
+}
+
+/**
+ * optional stringified
+ */
+{
+  const x = stringified(number(), { optional: true });
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => TRUE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, { foo: string }> => FALSE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => TRUE;
+}
+
+/**
+ * optional stringified content
+ */
+{
+  const x = stringified(number({ optional: true }));
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => TRUE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, { foo: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
 }
