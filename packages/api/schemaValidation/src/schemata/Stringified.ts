@@ -3,7 +3,7 @@ import {
   BaseSchema,
   ValidationResult,
   RecurseValidation,
-  inferVoidType
+  inferEmptyType
 } from "./Base";
 
 interface StringifiedOptions<Optional extends boolean = false> {
@@ -13,7 +13,7 @@ interface StringifiedOptions<Optional extends boolean = false> {
 export type StringifiedSchemaValue<
   Parsed extends Schema,
   Optional extends boolean
-> = Parsed["@nativeType"] | inferVoidType<Optional>;
+> = Parsed["@nativeType"] | inferEmptyType<Optional>;
 
 export type StringifiedSchemaError<Parsed extends Schema> =
   | { errorCode: "type"; foundType: string }
@@ -53,7 +53,7 @@ export class StringifiedSchema<
     const type = typeof value;
     if (type !== "string") {
       return value == null && this.options.optional
-        ? { ok: true, value: void 0 as inferVoidType<Optional> }
+        ? { ok: true, value: void 0 as inferEmptyType<Optional> }
         : { ok: false, error: { errorCode: "type", foundType: typeof value } };
     }
 

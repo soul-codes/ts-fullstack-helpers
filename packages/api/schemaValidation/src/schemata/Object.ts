@@ -1,5 +1,5 @@
 import {
-  inferVoidType,
+  inferEmptyType,
   ISchema,
   BaseSchema,
   RecurseValidation,
@@ -42,7 +42,7 @@ export interface ObjectOptions<Optional extends boolean = false> {
 export type ObjectSchemaValue<
   Shape extends SchemaShape,
   Optional extends boolean
-> = inferObjectNativeType<Shape> | inferVoidType<Optional>;
+> = inferObjectNativeType<Shape> | inferEmptyType<Optional>;
 export type ObjectSchemaError<Shape extends SchemaShape> =
   | { errorCode: "type"; foundType: string }
   | {
@@ -77,7 +77,7 @@ export class ObjectSchema<
     const type = typeof value;
     if (type !== "object" || !type)
       return value == null && this.options.optional
-        ? { ok: true, value: void 0 as inferVoidType<Optional> }
+        ? { ok: true, value: void 0 as inferEmptyType<Optional> }
         : {
             ok: false,
             error: { errorCode: "type" as "type", foundType: type }

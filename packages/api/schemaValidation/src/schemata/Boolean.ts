@@ -1,4 +1,4 @@
-import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
+import { BaseSchema, inferEmptyType, ValidationResult } from "./Base";
 
 export interface BooleanOptions<Optional extends boolean = false> {
   optional?: Optional;
@@ -8,7 +8,7 @@ export type BooleanSchemaError = { errorCode: "type"; foundType: string };
 
 export type BooleanSchemaValue<Optional extends boolean> =
   | boolean
-  | inferVoidType<Optional>;
+  | inferEmptyType<Optional>;
 
 export class BooleanSchema<Optional extends boolean = false> extends BaseSchema<
   "boolean",

@@ -1,4 +1,4 @@
-import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
+import { BaseSchema, inferEmptyType, ValidationResult } from "./Base";
 
 export interface StringOptions<Optional extends boolean = false> {
   minLength?: number;
@@ -20,7 +20,7 @@ export type StringSchemaError =
 
 export type StringSchemaValue<Optional extends boolean> =
   | string
-  | inferVoidType<Optional>;
+  | inferEmptyType<Optional>;
 
 export class StringSchema<Optional extends boolean = false> extends BaseSchema<
   "string",
@@ -40,7 +40,7 @@ export class StringSchema<Optional extends boolean = false> extends BaseSchema<
       return value == null && this.options.optional
         ? {
             ok: true,
-            value: void 0 as inferVoidType<Optional>
+            value: void 0 as inferEmptyType<Optional>
           }
         : {
             ok: false,

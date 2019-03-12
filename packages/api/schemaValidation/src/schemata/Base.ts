@@ -3,9 +3,9 @@ export type RecurseValidation = (
   schema: ISchema<any, any, any>
 ) => ValidationResult<any, any>;
 
-export type inferVoidType<Optional extends boolean> = Optional extends false
+export type inferEmptyType<Optional extends boolean> = Optional extends false
   ? never
-  : undefined | void;
+  : undefined | void | null;
 
 export type ValidationResult<Value, Error> =
   | { ok: false; error: Error }

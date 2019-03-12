@@ -1,7 +1,7 @@
 import {
   ISchema,
   BaseSchema,
-  inferVoidType,
+  inferEmptyType,
   RecurseValidation,
   ValidationResult
 } from "./Base";
@@ -16,7 +16,7 @@ export interface ArrayOptions<Optional extends boolean = false> {
 
 export type ArraySchemaValue<Item extends Schema, Optional extends boolean> =
   | Array<Item["@nativeType"]>
-  | inferVoidType<Optional>;
+  | inferEmptyType<Optional>;
 
 export type ArraySchemaError<Item extends Schema> =
   | { errorCode: "type"; foundType: string }
@@ -61,7 +61,7 @@ export class ArraySchema<
   > {
     if (!Array.isArray(value)) {
       return value == null && this.options.optional
-        ? { ok: true, value: void 0 as inferVoidType<Optional> }
+        ? { ok: true, value: void 0 as inferEmptyType<Optional> }
         : {
             ok: false,
             error: { errorCode: "type" as "type", foundType: typeof value }

@@ -1,4 +1,4 @@
-import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
+import { BaseSchema, inferEmptyType, ValidationResult } from "./Base";
 
 export interface NumberOptions<Optional extends boolean = false> {
   min?: number;
@@ -8,7 +8,7 @@ export interface NumberOptions<Optional extends boolean = false> {
 
 export type NumberSchemaValue<Optional extends boolean> =
   | number
-  | inferVoidType<Optional>;
+  | inferEmptyType<Optional>;
 export type NumberSchemaError =
   | ({
       errorCode: "range";
@@ -31,7 +31,7 @@ export class NumberSchema<Optional extends boolean = false> extends BaseSchema<
     const type = typeof value;
     if (type !== "number")
       return value == null && this.options.optional
-        ? { ok: true as true, value: void 0 as inferVoidType<Optional> }
+        ? { ok: true as true, value: void 0 as inferEmptyType<Optional> }
         : {
             ok: false as false,
             error: { errorCode: "type" as "type", foundType: type }

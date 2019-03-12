@@ -1,4 +1,4 @@
-import { BaseSchema, inferVoidType, ValidationResult } from "./Base";
+import { BaseSchema, inferEmptyType, ValidationResult } from "./Base";
 
 export interface EnumOptions<Optional extends boolean = false> {
   optional?: Optional;
@@ -9,7 +9,7 @@ export type EnumValue = string | boolean | number;
 export type EnumSchemaValue<
   Values extends EnumValue,
   Optional extends boolean
-> = Values | inferVoidType<Optional>;
+> = Values | inferEmptyType<Optional>;
 
 export type EnumSchemaError<Values extends EnumValue> = {
   errorCode: "mismatch";
@@ -53,7 +53,7 @@ export class EnumSchema<
 
     return {
       ok: true,
-      value: value == null ? (void 0 as inferVoidType<Optional>) : value
+      value: value == null ? (void 0 as inferEmptyType<Optional>) : value
     };
   }
 }

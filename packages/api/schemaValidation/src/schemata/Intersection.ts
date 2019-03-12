@@ -2,7 +2,7 @@ import {
   BaseSchema,
   RecurseValidation,
   ValidationResult,
-  inferVoidType,
+  inferEmptyType,
   ISchema
 } from "./Base";
 
@@ -16,7 +16,7 @@ export type IntersectionSchemaValue<
   Optional extends boolean
 > =
   | getNativeTypes<unionToIntersection<ArrayItem<Types>>>
-  | inferVoidType<Optional>;
+  | inferEmptyType<Optional>;
 
 export type IntersectionSchemaError<Types extends Schema[]> =
   | { errorCode: "type"; foundType: string }
@@ -55,7 +55,7 @@ export class IntersectionSchema<
     const type = typeof value;
     if (type !== "object" || !type)
       return value == null && this.options.optional
-        ? { ok: true, value: void 0 as inferVoidType<Optional> }
+        ? { ok: true, value: void 0 as inferEmptyType<Optional> }
         : {
             ok: false,
             error: { errorCode: "type", foundType: type }
