@@ -44,6 +44,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -56,6 +57,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -68,6 +70,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -80,6 +83,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -92,6 +96,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string> => FALSE;
   (): isMatched<Check, boolean> => TRUE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -104,6 +109,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string> => FALSE;
   (): isMatched<Check, boolean> => TRUE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -120,6 +126,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, 10> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -136,6 +143,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, 10> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -150,6 +158,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string[]> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -164,6 +173,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string[]> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -181,6 +191,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { bar: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -201,6 +212,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { bar: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -215,6 +227,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: number }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -229,6 +242,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: number }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -247,6 +261,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { bar: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -265,6 +280,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { bar: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -278,6 +294,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
 }
 
 /**
@@ -291,6 +308,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
@@ -304,6 +322,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
 
 /**
