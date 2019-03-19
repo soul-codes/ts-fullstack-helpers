@@ -1,11 +1,10 @@
 import {
+  BaseSchema,
   inferEmptyType,
   ISchema,
-  BaseSchema,
   RecurseValidation,
   ValidationResult
 } from "./Base";
-import { string } from "./String";
 
 type Schema = ISchema<string, any, any>;
 type SchemaShape = { [key: string]: Schema };
@@ -123,4 +122,83 @@ export function shape<Shape extends SchemaShape>(
   options: ObjectOptions<boolean> = {}
 ): ObjectSchema<Shape, boolean> {
   return new ObjectSchema(shape, options);
+}
+
+/**
+ * Creates a strictly typed partial shape schema: this is one single key-value
+ * pair that can build a shape schema using `computedShape`. You can use this
+ * method to generate a key-value fragment of the shape schema where the key is
+ * of an unknown but specific.
+ * @param key
+ * @param schema
+ */
+export function partialShape<Key extends string, Value extends Schema>(
+  key: Key,
+  schema: Value
+) {
+  return { [key]: schema } as { [key in Key]: Value };
+}
+
+/**
+ * Create a shape schema whose value type is dynamically computed based on the
+ * composition of partial shapes.
+ * @param partials
+ */
+export function computedShape<
+  T1 extends { [key: string]: Schema } = {},
+  T2 extends { [key: string]: Schema } = {},
+  T3 extends { [key: string]: Schema } = {},
+  T4 extends { [key: string]: Schema } = {},
+  T5 extends { [key: string]: Schema } = {},
+  T6 extends { [key: string]: Schema } = {},
+  T7 extends { [key: string]: Schema } = {},
+  T8 extends { [key: string]: Schema } = {},
+  T9 extends { [key: string]: Schema } = {},
+  T10 extends { [key: string]: Schema } = {},
+  T11 extends { [key: string]: Schema } = {},
+  T12 extends { [key: string]: Schema } = {},
+  T13 extends { [key: string]: Schema } = {},
+  T14 extends { [key: string]: Schema } = {},
+  T15 extends { [key: string]: Schema } = {},
+  T16 extends { [key: string]: Schema } = {}
+>(
+  partials: [
+    T1,
+    T2?,
+    T3?,
+    T4?,
+    T5?,
+    T6?,
+    T7?,
+    T8?,
+    T9?,
+    T10?,
+    T11?,
+    T12?,
+    T13?,
+    T14?,
+    T15?,
+    T16?
+  ]
+): ObjectSchema<
+  T1 &
+    T2 &
+    T3 &
+    T4 &
+    T5 &
+    T6 &
+    T7 &
+    T8 &
+    T9 &
+    T10 &
+    T11 &
+    T12 &
+    T13 &
+    T14 &
+    T15 &
+    T16,
+  false
+>;
+export function computedShape<T extends { [key: string]: Schema }>(ts: T[]) {
+  return shape(Object.assign({}, ...ts));
 }
