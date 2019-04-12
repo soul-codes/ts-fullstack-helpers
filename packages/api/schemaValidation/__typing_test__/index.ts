@@ -8,7 +8,8 @@ import {
   number,
   shape,
   string,
-  stringified
+  stringified,
+  record
 } from "../src";
 
 type TRUE = { true: true };
@@ -171,6 +172,38 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, string> => FALSE;
   (): isMatched<Check, number[]> => FALSE;
   (): isMatched<Check, string[]> => TRUE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
+}
+
+/**
+ * required record
+ */
+{
+  const x = record(string());
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => FALSE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, number[]> => FALSE;
+  (): isMatched<Check, string[]> => FALSE;
+  (): isMatched<Check, Record<string, string>> => TRUE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
+}
+
+/**
+ * optional record
+ */
+{
+  const x = record(string(), { optional: true });
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => FALSE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, number[]> => FALSE;
+  (): isMatched<Check, string[]> => FALSE;
+  (): isMatched<Check, Record<string, string>> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
   (): isMatched<Check, null> => TRUE;
