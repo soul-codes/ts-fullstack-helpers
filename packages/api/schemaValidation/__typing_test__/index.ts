@@ -280,6 +280,21 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
 }
 
 /**
+ * optional union
+ */
+{
+  const x = anyOf([string(), shape({ foo: string() })], { optional: true });
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => FALSE;
+  (): isMatched<Check, string> => TRUE;
+  (): isMatched<Check, { foo: string }> => TRUE;
+  (): isMatched<Check, { foo: number }> => FALSE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
+}
+
+/**
  * intersection
  */
 {

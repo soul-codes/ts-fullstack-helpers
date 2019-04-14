@@ -2,28 +2,37 @@ import {
   ISchema,
   BaseSchema,
   RecurseValidation,
-  ValidationResult
+  ValidationResult,
+  inferEmptyType
 } from "./Base";
 
 type Schema = ISchema<any, any, any>;
 
-export type UnionSchemaValue<Types extends Schema[]> = ArrayItem<
-  Types
->["@nativeType"];
+export type UnionSchemaValue<
+  Types extends Schema[],
+  Optional extends boolean = false
+> = ArrayItem<Types>["@nativeType"] | inferEmptyType<Optional>;
+
+export interface UnionOptions<Optional extends boolean = false> {
+  optional?: Optional;
+}
 
 export type UnionSchemaError<Types extends Schema[]> = {
   errorCode: "type";
   childErrors: (ArrayItem<Types>["@errorType"])[];
 };
 
-export class UnionSchema<Types extends Schema[]> extends BaseSchema<
+export class UnionSchema<
+  Types extends Schema[],
+  Optional extends boolean = false
+> extends BaseSchema<
   "union",
-  UnionSchemaValue<Types>,
+  UnionSchemaValue<Types, Optional>,
   UnionSchemaError<Types>,
-  {}
+  UnionOptions<Optional>
 > {
-  constructor(readonly types: Types) {
-    super({});
+  constructor(readonly types: Types, readonly options: UnionOptions<Optional>) {
+    super(options);
   }
 
   get typeName() {
@@ -34,6 +43,10 @@ export class UnionSchema<Types extends Schema[]> extends BaseSchema<
     value: any,
     recurse: RecurseValidation
   ): ValidationResult<UnionSchemaValue<Types>, UnionSchemaError<Types>> {
+    if (value == null && this.options.optional) {
+      return { ok: true, value: void 0 as inferEmptyType<Optional> };
+    }
+
     const errors: (ArrayItem<Types>["@errorType"])[] = [];
     for (let i = 0; i < this.types.length; i++) {
       const type = this.types[i];
@@ -48,8 +61,23 @@ export class UnionSchema<Types extends Schema[]> extends BaseSchema<
   }
 }
 
-export function anyOf<Types extends Schema>(types: Types[]) {
-  return new UnionSchema([...types]);
+export function anyOf<Types extends Schema>(
+  types: Types[]
+): UnionSchema<Types[], false>;
+export function anyOf<Types extends Schema>(
+  types: Types[],
+  options: UnionOptions<false>
+): UnionSchema<Types[], false>;
+export function anyOf<Types extends Schema>(
+  types: Types[],
+  options: UnionOptions<true>
+): UnionSchema<Types[], true>;
+
+export function anyOf<Types extends Schema>(
+  types: Types[],
+  options?: UnionOptions<boolean>
+): UnionSchema<Types[], boolean> {
+  return new UnionSchema([...types], options || { optional: false });
 }
 
 type ArrayItem<T extends Array<any>> = T extends Array<infer Item>
