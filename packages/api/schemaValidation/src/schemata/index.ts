@@ -2,6 +2,7 @@ export * from "./Any";
 export * from "./Array";
 export * from "./Base";
 export * from "./Boolean";
+export * from "./Deferred";
 export * from "./Enum";
 export * from "./Intersection";
 export * from "./Number";

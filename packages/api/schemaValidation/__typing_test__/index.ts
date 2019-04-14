@@ -9,7 +9,8 @@ import {
   shape,
   string,
   stringified,
-  record
+  record,
+  deferred
 } from "../src";
 
 type TRUE = { true: true };
@@ -371,4 +372,30 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { bar: string[] }> => TRUE;
   (): isMatched<Check, boolean> => TRUE;
   (): isMatched<Check, void> => TRUE;
+}
+
+/**
+ * deferred required boolean
+ */
+{
+  const x = deferred(() => boolean({ optional: false }));
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => FALSE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, boolean> => TRUE;
+  (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
+}
+
+/**
+ * deferred optional boolean
+ */
+{
+  const x = deferred(() => boolean({ optional: true }));
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => FALSE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, boolean> => TRUE;
+  (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
 }
