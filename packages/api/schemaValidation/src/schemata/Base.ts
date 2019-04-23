@@ -64,9 +64,9 @@ export abstract class BaseSchema<
    * Use this method to enforce documentation of the schema's value type as
    * a named type, class or interface.
    */
-  tsName<T extends NativeType>(): BaseSchema<TypeName, T, ErrorType, OptionsZ> &
+  tsName<T extends NativeType>(): BaseSchema<TypeName, T, ErrorType, Options> &
     (NativeType extends T
-      ? BaseSchema<TypeName, T, ErrorType, OptionsZ>
+      ? BaseSchema<TypeName, T, ErrorType, Options>
       : this) {
     return this as any;
   }
