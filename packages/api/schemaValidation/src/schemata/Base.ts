@@ -22,13 +22,6 @@ export interface ISchema<TypeName, NativeType, ErrorType> {
     value: any,
     recurse: RecurseValidation
   ): ValidationResult<NativeType, ErrorType>;
-
-  /**
-   * Identity function that restricts the input argument to a valid property name
-   * of the schema's result type.
-   * @param key
-   */
-  keyName<T extends KeyOf<NativeType>>(key: T): T;
 }
 
 type KeyOf<T> = T extends object ? keyof T : never;
@@ -56,6 +49,11 @@ export abstract class BaseSchema<
     recurse: RecurseValidation
   ): { ok: false; error: ErrorType } | { ok: true; value: NativeType };
 
+  /**
+   * Identity function that restricts the input argument to a valid property name
+   * of the schema's result type.
+   * @param key
+   */
   keyName<T extends KeyOf<NativeType>>(key: T) {
     return key;
   }
@@ -66,8 +64,10 @@ export abstract class BaseSchema<
    * Use this method to enforce documentation of the schema's value type as
    * a named type, class or interface.
    */
-  tsName<T extends NativeType>(): ISchema<TypeName, T, ErrorType> &
-    (NativeType extends T ? ISchema<TypeName, T, ErrorType> : this) {
+  tsName<T extends NativeType>(): BaseSchema<TypeName, T, ErrorType, OptionsZ> &
+    (NativeType extends T
+      ? BaseSchema<TypeName, T, ErrorType, OptionsZ>
+      : this) {
     return this as any;
   }
 }
