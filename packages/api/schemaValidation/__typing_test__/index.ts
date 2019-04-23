@@ -215,6 +215,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
  */
 {
   const x = shape({ foo: string(), bar: number({ optional: true }) });
+  x.tsName().keyName("bar"); // OK
   type Check = typeof x["@nativeType"];
   (): isMatched<Check, number> => FALSE;
   (): isMatched<Check, string> => FALSE;
@@ -236,6 +237,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
     { foo: string(), bar: number({ optional: true }) },
     { optional: true }
   );
+  x.tsName().keyName("foo"); // OK
   type Check = typeof x["@nativeType"];
   (): isMatched<Check, number> => FALSE;
   (): isMatched<Check, string> => FALSE;
