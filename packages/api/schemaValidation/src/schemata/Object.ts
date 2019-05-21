@@ -74,7 +74,7 @@ export class ObjectSchema<
     ObjectSchemaError<Shape>
   > {
     const type = typeof value;
-    if (type !== "object" || !type)
+    if (type !== "object" || !value)
       return value == null && this.options.optional
         ? { ok: true, value: void 0 as inferEmptyType<Optional> }
         : {
