@@ -10,7 +10,8 @@ import {
   string,
   stringified,
   record,
-  deferred
+  deferred,
+  object
 } from "../src";
 
 type TRUE = { true: true };
@@ -225,6 +226,7 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: void; bar: string }> => FALSE;
   (): isMatched<Check, { bar: string }> => FALSE;
   (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, object> => FALSE;
   (): isMatched<Check, void> => FALSE;
   (): isMatched<Check, null> => FALSE;
 }
@@ -246,6 +248,37 @@ type isMatched<Expected, Test> = ((a: Expected) => void) extends ((
   (): isMatched<Check, { foo: string }> => TRUE;
   (): isMatched<Check, { foo: void; bar: string }> => FALSE;
   (): isMatched<Check, { bar: string }> => FALSE;
+  (): isMatched<Check, object> => FALSE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => TRUE;
+  (): isMatched<Check, null> => TRUE;
+}
+
+/**
+ * required object
+ */
+{
+  const x = object();
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => FALSE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, object> => TRUE;
+  (): isMatched<Check, { foo: void; bar: string }> => TRUE;
+  (): isMatched<Check, boolean> => FALSE;
+  (): isMatched<Check, void> => FALSE;
+  (): isMatched<Check, null> => FALSE;
+}
+
+/**
+ * optional object
+ */
+{
+  const x = object({ optional: true });
+  type Check = typeof x["@nativeType"];
+  (): isMatched<Check, number> => FALSE;
+  (): isMatched<Check, string> => FALSE;
+  (): isMatched<Check, object> => TRUE;
+  (): isMatched<Check, { foo: void; bar: string }> => TRUE;
   (): isMatched<Check, boolean> => FALSE;
   (): isMatched<Check, void> => TRUE;
   (): isMatched<Check, null> => TRUE;
